@@ -1,5 +1,6 @@
 package com.marketapp.marketapp.DTO;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,8 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@EqualsAndHashCode
+
 public class productDTO {
     private String P_price;
     private Integer P_amt;

@@ -8,6 +8,7 @@ import com.marketapp.marketapp.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -20,11 +21,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.print.attribute.standard.Media;
 import java.time.LocalDate;
 import java.util.*;
 
 import static org.awaitility.Awaitility.given;
+import static org.awaitility.Awaitility.pollInSameThread;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @WebMvcTest(ProductController.class)
 @AutoConfigureWebMvc // 이 어노테이션을 통해 MockMvc를 Builder없이 주입받을 수 있음
@@ -93,12 +98,52 @@ class ProductControllerTestTest {
 
     @Test
     @DisplayName("商品追加")
-    void addProduct() throws Exception{
+    void addproduct() throws Exception{
+        //given
+        product p = new product(121,"test1",5,LocalDate.of(2024,5,31),"300",1101,1002);
 
+        //stub
+        BDDMockito.willDoNothing().given(p_service).addproduct(any(product.class));
+
+        //when then
+        mockMvc.perform(MockMvcRequestBuilders.post("/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\":121,\"name\":\"test1\",\"quantity\":5,\"expiryDate\":\"2024-05-31\",\"price\":\"300\",\"categoryId\":1101,\"supplierId\":1002}"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 
+    @Test
+    @DisplayName("修正機能")
+    void chaneproduct() throws Exception{
 
+        //given
+        Integer pid = 1;
+        product p = new product(121,"test1",5,LocalDate.of(2024,5,31),"300",1101,1002);
+
+        //stub
+//        BDDMockito.given(p_service.updateProduct(p_id,p))
+        BDDMockito.willDoNothing().given(p_service).updateProduct(eq(pid),any(product.class));
+
+        //when then
+        mockMvc.perform(MockMvcRequestBuilders.put("/change/{p_id}" , pid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"p_id\":121,\"p_name\":\"test1\",\"p_amt\":5,\"p_day\":\"2024-05-31\",\"p_price\":\"300\",\"c_code\":1002,\"s_code\":1101}"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        ArgumentCaptor<product> productCaptor = ArgumentCaptor.forClass(product.class);
+        BDDMockito.verify(p_service).updateProduct(eq(pid), productCaptor.capture());
+
+        product capturedproduct = productCaptor.getValue();
+        assertEquals(p.getP_id(),capturedproduct.getP_id());
+        assertEquals(p.getP_name(),capturedproduct.getP_name());
+        assertEquals(p.getP_amt(),capturedproduct.getP_amt());
+        assertEquals(p.getP_day(), capturedproduct.getP_day());
+        assertEquals(p.getP_price(),capturedproduct.getP_price());
+        assertEquals(p.getS_code(),capturedproduct.getS_code());
+        assertEquals(p.getC_code(),capturedproduct.getC_code());
+
+    }
 
 
 

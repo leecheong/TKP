@@ -24,6 +24,12 @@ public class product {
     private Integer S_code;
     private Integer C_code;
 
+
+    public product(){
+
+    }
+
+
     public product(Integer p_id, String p_name, int p_amt, LocalDate p_day, String p_price, Integer s_code, Integer c_code) {
         this.P_id = p_id;
         this.P_name = p_name;

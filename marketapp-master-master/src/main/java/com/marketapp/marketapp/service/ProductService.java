@@ -37,14 +37,7 @@ public class ProductService {
             return allproducts;
         }
 
-    //find product
-//    public List<Object[]> searchproduct(String keyword) {
-//        if (p_repository.findByp_name(keyword).isEmpty()) {
-//            throw new ItemNotFoundException(keyword);
-//        }
-//        System.out.println(keyword);
-//        return p_repository.findByp_name(keyword);
-//    }
+
     public Optional<product> findProduct(Integer P_id){
         return p_repository.findById(P_id);
     }
@@ -56,7 +49,7 @@ public class ProductService {
         p_repository.save(  p);
     }
 
-//    }
+
 @Transactional
 public void updateProduct(Integer P_id, product p) {
     Optional<product> existingProductOptional = p_repository.findById(P_id);

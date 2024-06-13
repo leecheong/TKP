@@ -133,7 +133,6 @@ class ProductServiceTest {
 
         //when
         p_service.deleteproduct(P_id);
-
         //then
         BDDMockito.verify(p_repository).deleteById(P_id);
 

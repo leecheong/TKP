@@ -46,7 +46,7 @@ public class ProductService {
 
     //add product
     public void addproduct (product p) {
-        p_repository.save(  p);
+        p_repository.save(p);
     }
 
 
